@@ -1,69 +1,139 @@
 import Image from "next/image";
+import Link from "next/link";
+import { getMeetings } from "@/lib/meetings-db";
 
 export default function Home() {
+  const meetings = getMeetings();
+  const latestMeeting = meetings[0];
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+    <div>
+      {/* Hero Section */}
+      <section className="relative overflow-hidden rounded-3xl bg-[#26343B] px-8 py-12 text-[#F4F0E8] md:px-14 md:py-16">
+        <div className="relative z-10 grid items-center gap-10 md:grid-cols-2">
+          {/* Hero Text */}
+          <div>
+            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-[#D8B98A]">
+              Lagos Ward
+            </p>
+
+            <h1 className="text-4xl font-semibold leading-tight md:text-6xl">
+              Sacrament Meeting
+              <span className="block text-[#D8B98A]">Planner</span>
+            </h1>
+
+            <p className="mt-6 max-w-xl text-base leading-7 text-[#D6DADD] md:text-lg">
+              Keep ward meetings organized with one simple place
+              for programs, hymns, speakers, prayers, announcements,
+              and meeting details.
+            </p>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href="/meetings"
+                className="rounded-full bg-[#D8B98A] px-6 py-3 text-sm font-semibold text-[#26343B] transition hover:bg-[#E5CDA6]"
+              >
+                View Meetings
+              </Link>
+
+              <Link
+                href="/meetings/current"
+                className="rounded-full border border-[#89939A] px-6 py-3 text-sm font-semibold text-[#F4F0E8] transition hover:bg-[#3A4A52]"
+              >
+                Current Meeting
+              </Link>
+            </div>
+          </div>
+
+          {/* Hero Image */}
+          <div className="relative z-10">
             <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+              src="/meeting-illustration.svg"
+              alt="Sacrament meeting planner program illustration"
+              width={800}
+              height={500}
+              className="h-auto w-full rounded-2xl"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </div>
         </div>
-      </main>
+
+        {/* Decorative Circles */}
+        <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full border border-[#D8B98A]/30" />
+        <div className="absolute -bottom-32 right-16 h-80 w-80 rounded-full border border-[#D8B98A]/20" />
+      </section>
+
+      {/* Latest Meeting Section */}
+      {latestMeeting && (
+        <section className="mt-10 grid gap-6 md:grid-cols-[1.4fr_0.6fr]">
+          <div className="rounded-3xl border border-[#D8CFC0] bg-[#FBF9F4] p-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8A6842]">
+              Latest Program
+            </p>
+
+            <h2 className="mt-3 text-3xl font-semibold text-[#26343B]">
+              {latestMeeting.date}
+            </h2>
+
+            <p className="mt-2 capitalize text-[#66737A]">
+              {latestMeeting.meetingType} meeting
+            </p>
+
+            <div className="mt-7 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-2xl bg-[#F1ECE2] p-4">
+                <p className="text-xs uppercase tracking-wider text-[#8A6842]">
+                  Presiding
+                </p>
+
+                <p className="mt-1 font-semibold text-[#26343B]">
+                  {latestMeeting.presiding}
+                </p>
+              </div>
+
+              <div className="rounded-2xl bg-[#F1ECE2] p-4">
+                <p className="text-xs uppercase tracking-wider text-[#8A6842]">
+                  Conducting
+                </p>
+
+                <p className="mt-1 font-semibold text-[#26343B]">
+                  {latestMeeting.conducting}
+                </p>
+              </div>
+            </div>
+
+            <Link
+              href={`/meetings/${latestMeeting.id}`}
+              className="mt-7 inline-flex items-center font-semibold text-[#8A6842] hover:text-[#6F512F]"
+            >
+              View full program
+              <span className="ml-2">→</span>
+            </Link>
+          </div>
+
+          {/* Meeting Count */}
+          <div className="rounded-3xl bg-[#E5DED0] p-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8A6842]">
+              In the planner
+            </p>
+
+            <p className="mt-5 text-5xl font-semibold text-[#26343B]">
+              {meetings.length}
+            </p>
+
+            <p className="mt-2 text-[#66737A]">
+              meeting programs available
+            </p>
+
+            <div className="mt-8 h-px bg-[#C8BFAF]" />
+
+            <Link
+              href="/meetings"
+              className="mt-6 inline-block text-sm font-semibold text-[#6F512F] hover:underline"
+            >
+              Browse all programs →
+            </Link>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
