@@ -11,10 +11,10 @@ function getMostRecentSunday(): string {
   return today.toISOString().split("T")[0];
 }
 
-export default function CurrentMeetingPage() {
+export default async function CurrentMeetingPage() {
   const currentSunday = getMostRecentSunday();
 
-  const meetings = getMeetings(currentSunday);
+  const meetings = await getMeetings(currentSunday);
 
   if (meetings.length === 0) {
     redirect("/meetings");

@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { getMeetings } from "@/lib/meetings-db";
 
-export default function Home() {
-  const meetings = getMeetings();
+export default async function Home() {
+  const meetings = await getMeetings();
   const latestMeeting = meetings[0];
 
   return (

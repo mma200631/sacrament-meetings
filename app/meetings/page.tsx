@@ -1,8 +1,30 @@
 import MeetingCard from "@/components/MeetingCard";
-import { getMeetings } from "@/lib/meetings-db";
+import MeetingSearch from "@/components/MeetingSearch";
+import Pagination from "@/components/Pagination";
+import {
+  getMeetings,
+  getMeetingsTotalPages,
+} from "@/lib/meetings-db";
 
-export default function MeetingsPage() {
-  const meetings = getMeetings();
+type MeetingsPageProps = {
+  searchParams: Promise<{
+    query?: string;
+    page?: string;
+  }>;
+};
+
+export default async function MeetingsPage({
+  searchParams,
+}: MeetingsPageProps) {
+  const params = await searchParams;
+
+  const query = params.query || "";
+  const currentPage = Number(params.page) || 1;
+
+  const [meetings, totalPages] = await Promise.all([
+    getMeetings(query, currentPage),
+    getMeetingsTotalPages(query),
+  ]);
 
   return (
     <section>
@@ -21,6 +43,8 @@ export default function MeetingsPage() {
         </p>
       </div>
 
+      <MeetingSearch />
+
       <div className="grid gap-6 md:grid-cols-2">
         {meetings.map((meeting) => (
           <MeetingCard
@@ -29,6 +53,12 @@ export default function MeetingsPage() {
           />
         ))}
       </div>
+
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        query={query}
+      />
     </section>
   );
 }

@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import MeetingDetail from "@/components/MeetingDetail";
+import { getMeetingById } from "@/lib/meetings-db";
 
 interface MeetingPageProps {
   params: Promise<{ id: string }>;
@@ -10,22 +11,17 @@ export default async function MeetingPage({
 }: MeetingPageProps) {
   const { id } = await params;
 
-  const response = await fetch(
-    `http://localhost:3000/api/meetings/${id}`,
-    {
-      cache: "no-store",
-    }
-  );
+  const meetingId = Number(id);
 
-  if (response.status === 400 || response.status === 404) {
+  if (Number.isNaN(meetingId)) {
     notFound();
   }
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch meeting");
-  }
+  const meeting = await getMeetingById(meetingId);
 
-  const meeting = await response.json();
+  if (!meeting) {
+    notFound();
+  }
 
   return <MeetingDetail meeting={meeting} />;
 }
