@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { deleteMeeting } from "@/lib/actions";
 import { SacramentMeeting } from "@/lib/types";
 
 interface MeetingCardProps {
@@ -8,6 +9,8 @@ interface MeetingCardProps {
 export default function MeetingCard({
   meeting,
 }: MeetingCardProps) {
+  const deleteMeetingWithId = deleteMeeting.bind(null, meeting.id);
+
   return (
     <article className="group rounded-2xl border border-[#d8cfc0] bg-[#fbf9f4] p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
       <div className="mb-5 flex items-start justify-between gap-4">
@@ -42,15 +45,33 @@ export default function MeetingCard({
         </p>
       </div>
 
-      <Link
-        href={`/meetings/${meeting.id}`}
-        className="mt-6 inline-flex items-center rounded-full bg-[#8a6842] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#6f512f]"
-      >
-        View meeting
-        <span className="ml-2 transition-transform group-hover:translate-x-1">
-          →
-        </span>
-      </Link>
+      <div className="mt-6 flex flex-wrap gap-3">
+        <Link
+          href={`/meetings/${meeting.id}`}
+          className="inline-flex items-center rounded-full bg-[#8a6842] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#6f512f]"
+        >
+          View meeting
+          <span className="ml-2 transition-transform group-hover:translate-x-1">
+            →
+          </span>
+        </Link>
+
+        <Link
+          href={`/meetings/new/${meeting.id}/edit`}
+          className="inline-flex items-center rounded-full border border-[#8a6842] px-5 py-2.5 text-sm font-semibold text-[#6f512f] transition hover:bg-[#e5ded0]"
+        >
+          Edit
+        </Link>
+
+        <form action={deleteMeetingWithId}>
+          <button
+            type="submit"
+            className="inline-flex items-center rounded-full border border-red-300 px-5 py-2.5 text-sm font-semibold text-red-700 transition hover:bg-red-50"
+          >
+            Delete
+          </button>
+        </form>
+      </div>
     </article>
   );
 }

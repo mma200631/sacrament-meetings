@@ -1,18 +1,23 @@
 import { redirect } from "next/navigation";
 import { getMeetings } from "@/lib/meetings-db";
 
-function getMostRecentSunday(): string {
+function getCurrentSunday(): string {
   const today = new Date();
-
   const day = today.getDay();
 
-  today.setDate(today.getDate() - day);
+  const daysUntilSunday = day === 0 ? 0 : 7 - day;
 
-  return today.toISOString().split("T")[0];
+  today.setDate(today.getDate() + daysUntilSunday);
+
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const date = String(today.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${date}`;
 }
 
 export default async function CurrentMeetingPage() {
-  const currentSunday = getMostRecentSunday();
+  const currentSunday = getCurrentSunday();
 
   const meetings = await getMeetings(currentSunday);
 
